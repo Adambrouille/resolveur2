@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="https://cdn4.iconfinder.com/data/icons/superheroes/512/hulk-512.png">
+    <link href="/style.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+  <title>Résolution d'équations du troisième degré</title>
+</head>
+<body>
+  <h1>Résolution d'équations du troisième degré</h1>
+  <form id="equationForm">
+    <div class="form">
+    <label for="inputA">Coefficient a :</label>
+    <input type="number" id="inputA" required>
+    <br>
+    <label for="inputB">Coefficient b :</label>
+    <input type="number" id="inputB" required>
+    <br>
+    <label for="inputC">Coefficient c :</label>
+    <input type="number" id="inputC" required>
+    <br>
+    <label for="inputD">Coefficient d :</label>
+    <input type="number" id="inputD" required>
+    <br>
+    <input type="submit" value="Résoudre">
+  </div>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    document.getElementById("equationForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const a = parseFloat(document.getElementById("inputA").value);
+      const b = parseFloat(document.getElementById("inputB").value);
+      const c = parseFloat(document.getElementById("inputC").value);
+      const d = parseFloat(document.getElementById("inputD").value);
+
+      const solutions = solveEquation(a, b, c, d);
+
+      displayResult(solutions);
+    });
+
+    function solveEquation(a, b, c, d) {
+      if (a === 0) {
+        throw new Error("Ce n'est pas une équation du troisième degré.");
+      }
+
+      // Utilisation de la méthode de Cardan pour résoudre l'équation
+      const p = (3 * a * c - b * b) / (3 * a * a);
+      const q = (2 * b * b * b - 9 * a * b * c + 27 * a * a * d) / (27 * a * a * a);
+
+      const discriminant = Math.pow(q / 2, 2) + Math.pow(p / 3, 3);
+      const thirdRootOfQDiv2 = Math.cbrt(q / 2);
+
+      if (discriminant === 0) {
+        // Une seule solution réelle et deux solutions complexes conjuguées
+        const x1 = (-thirdRootOfQDiv2 - b / (3 * a)).toFixed(4);
+        return [x1];
+      } else if (discriminant > 0) {
+        // Trois solutions réelles distinctes
+        const r = Math.cbrt(-q / 2 + Math.sqrt(discriminant));
+        const s = Math.cbrt(-q / 2 - Math.sqrt(discriminant));
+
+        const x1 = (r + s) - b / (3 * a);
+        return [x1];
+      } else {
+        // Une solution réelle et deux solutions complexes non conjuguées
+        const r = Math.pow(Math.sqrt(Math.pow(q / 2, 2) - Math.pow(p / 3, 3)), 1/6);
+        const theta = Math.atan2(Math.sqrt(Math.abs(Math.pow(q / 2, 2) - Math.pow(p / 3, 3))), -q / 2);
+
+        const realPart = -thirdRootOfQDiv2;
+        const imagPart = Math.sqrt(3) * thirdRootOfQDiv2;
+
+        const x1 = (2 * r * Math.cos(theta) - b / (3 * a)).toFixed(4);
+        const x2 = (2 * r * Math.cos(theta + 2 * Math.PI / 3) - b / (3 * a)).toFixed(4);
+        const x3 = (2 * r * Math.cos(theta + 4 * Math.PI / 3) - b / (3 * a)).toFixed(4);
+
+        return [x1, x2, x3];
+      }
+    }
+
+    function displayResult(solutions) {
+      const resultDiv = document.getElementById("result");
+
+      if (solutions.length === 0) {
+        resultDiv.textContent = "L'équation n'a pas de solutions réelles.";
+      } else {
+        let resultString = "Les solutions sont : ";
+        for (let i = 0; i < solutions.length; i++) {
+          resultString += `x${i + 1} = ${solutions[i]}`;
+          if (i < solutions.length - 1) {
+            resultString += ", ";
+          }
+        }
+        resultDiv.textContent = resultString;
+      }
+    }
+  </script>
+</body>
+</html>
