@@ -1,0 +1,18 @@
+#equationForm {
+  display: flex;
+  justify-content: center;
+}
+#equationForm .form {
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+/*# sourceMappingURL=style.css.map */
